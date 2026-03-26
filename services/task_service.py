@@ -7,12 +7,15 @@ class TaskService:
 
     def create_task(self, project_title, title, assigned_to=None):
         """Create a task and assign it to a project."""
+        tasks = project.get("tasks", [])
+        new_id = max([t["id"] for t in tasks], default=0) + 1
+
+        task = Task(title, assigned_to)
+        task.id = new_id
         project = self._find_project(project_title)
 
         if not project:
             raise ValueError(f"Project '{project_title}' not found.")
-
-        task = Task(title, assigned_to)
 
         task_data = {
             "id": task.id,
